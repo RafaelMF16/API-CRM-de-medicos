@@ -25,6 +25,7 @@ public class PacienteController {
 
     @PostMapping
     @Transactional
+//  O Método save é chamado quando um cadastro é requisitado, salvando um novo paciente no banco de dados;
     public ResponseEntity save(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriBuilder){
         var paciente = new Paciente(dados);
         pacienteRepository.save(paciente);
@@ -34,6 +35,7 @@ public class PacienteController {
     }
 
     @GetMapping
+//  O Método list é chamado quando uma listagem de pacientes é requisitada, listando 5 pacientes;
     public ResponseEntity<Page<DadosListagemPaciente>> list(@PageableDefault(size = 5, sort = {"nome"}) Pageable pagina){
         var page = pacienteRepository.findAllByAtivoTrue(pagina).map(DadosListagemPaciente::new);
         return ResponseEntity.ok(page);
@@ -41,6 +43,7 @@ public class PacienteController {
 
     @PutMapping
     @Transactional
+//  O Método update é chamado quando uma atualização é requisitada, atualizando algum dado do paciente passado como parâmetro;
     public ResponseEntity update(@RequestBody @Valid DadosAtualizarPaciente dados){
         var paciente = pacienteRepository.getReferenceById(dados.id());
         paciente.atualizarInformacoes(dados);
@@ -50,6 +53,8 @@ public class PacienteController {
 
     @DeleteMapping("/{id}")
     @Transactional
+//  O Método delete é chamado quando uma exclusão de paciente é requisitada,o delete é lógico,
+//  portanto não deleta o paciente do banco de dados, apenas o desativa;
     public ResponseEntity delete(@PathVariable Long id){
         var paciente = pacienteRepository.getReferenceById(id);
         paciente.inativar();
@@ -58,6 +63,7 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}")
+//  O Método detail é chamado quando um detalhamento é requisitado, detalhando o paciente passado como parâmetro;
     public ResponseEntity detail(@PathVariable Long id){
         var paciente = pacienteRepository.getReferenceById(id);
 

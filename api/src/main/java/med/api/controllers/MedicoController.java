@@ -25,6 +25,7 @@ public class MedicoController {
 
     @PostMapping
     @Transactional
+//  O Método save é chamado quando um cadastro é requisitado, salvando um novo médico no banco de dados;
     public ResponseEntity save(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder){
         var medico = new Medico(dados);
         medicoRepository.save(medico);
@@ -34,6 +35,7 @@ public class MedicoController {
     }
 
     @GetMapping
+//  O Método list é chamado quando uma listagem de médicos é requisitada, listando 5 médicos;
     public ResponseEntity <Page<DadosListagemMedico>> list(@PageableDefault(size = 5, sort = {"crm"}) Pageable pagina){
         var page = medicoRepository.findAllByAtivoTrue(pagina).map(DadosListagemMedico::new);
         return ResponseEntity.ok(page);
@@ -41,6 +43,7 @@ public class MedicoController {
 
     @PutMapping
     @Transactional
+//  O Método update é chamado quando uma atualização é requisitada, atualizando algum dado do médico passado como parâmetro;
     public ResponseEntity update(@RequestBody @Valid DadosAtualizarMedico dados){
         var medico = medicoRepository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados);
@@ -50,6 +53,8 @@ public class MedicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
+//  O Método delete é chamado quando uma exclusão de médico é requisitada,o delete é lógico,
+//  portanto não deleta o médico do banco de dados, apenas o desativa;
     public ResponseEntity delete(@PathVariable Long id){
         var medico = medicoRepository.getReferenceById(id);
         medico.inativar();
@@ -58,6 +63,7 @@ public class MedicoController {
     }
 
     @GetMapping("/{id}")
+//  O Método detail é chamado quando um detalhamento é requisitado, detalhando o médico passado como parâmetro;
     public ResponseEntity detail(@PathVariable Long id){
         var medico = medicoRepository.getReferenceById(id);
 
