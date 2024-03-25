@@ -1,12 +1,12 @@
 package med.api.controllers;
 
 import jakarta.validation.Valid;
-import med.api.models.entities.Medico;
-import med.api.models.medico.DadosAtualizarMedico;
-import med.api.models.medico.DadosCadastroMedico;
-import med.api.models.medico.DadosDetalhamentoMedico;
-import med.api.models.medico.DadosListagemMedico;
-import med.api.models.repositories.MedicoRepository;
+import med.api.domain.entities.Medico;
+import med.api.domain.medico.DadosAtualizarMedico;
+import med.api.domain.medico.DadosCadastroMedico;
+import med.api.domain.medico.DadosDetalhamentoMedico;
+import med.api.domain.medico.DadosListagemMedico;
+import med.api.domain.repositories.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
