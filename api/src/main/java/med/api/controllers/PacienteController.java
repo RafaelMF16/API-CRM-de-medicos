@@ -21,52 +21,46 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 public class PacienteController {
     @Autowired
-    public PacienteRepository pacienteRepository;
+    public PacienteRepository pacienteRepository; // Representa os pacientes no banco de dados
 
     @PostMapping
     @Transactional
-//  O Método save é chamado quando um cadastro é requisitado, salvando um novo paciente no banco de dados;
     public ResponseEntity save(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriBuilder){
-        var paciente = new Paciente(dados);
-        pacienteRepository.save(paciente);
-        var uri = uriBuilder.path("/pacientes/{id}").buildAndExpand(paciente).toUri();
+        var paciente = new Paciente(dados); // Cria um paciente com os dados passados no parâmetro
+        pacienteRepository.save(paciente); // Salva o paciente criado no banco de dados
+        var uri = uriBuilder.path("/pacientes/{id}").buildAndExpand(paciente).toUri(); // Cria uma, uri para poder acessar o paciente no banco de dados
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(paciente));
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(paciente)); // Retorna o paciente, os seus dados e código 201 Created caso tenha sucesso
     }
 
     @GetMapping
-//  O Método list é chamado quando uma listagem de pacientes é requisitada, listando 5 pacientes;
     public ResponseEntity<Page<DadosListagemPaciente>> list(@PageableDefault(size = 5, sort = {"nome"}) Pageable pagina){
-        var page = pacienteRepository.findAllByAtivoTrue(pagina).map(DadosListagemPaciente::new);
-        return ResponseEntity.ok(page);
+        var page = pacienteRepository.findAllByAtivoTrue(pagina).map(DadosListagemPaciente::new); // Cria uma página apenas com os pacientes ativos
+        return ResponseEntity.ok(page); // Retorna a página com 5 pacientes e código 200 Ok caso tenha sucesso
     }
 
     @PutMapping
     @Transactional
-//  O Método update é chamado quando uma atualização é requisitada, atualizando algum dado do paciente passado como parâmetro;
     public ResponseEntity update(@RequestBody @Valid DadosAtualizarPaciente dados){
-        var paciente = pacienteRepository.getReferenceById(dados.id());
-        paciente.atualizarInformacoes(dados);
+        var paciente = pacienteRepository.getReferenceById(dados.id()); // Guarda o paciente que terá os dados atualizados
+        paciente.atualizarInformacoes(dados); // Atuazliza os dados do paciente
 
-        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente)); // Retorna os dados do paciente atualizados e o código 200 Ok caso tenha sucesso
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-//  O Método delete é chamado quando uma exclusão de paciente é requisitada,o delete é lógico,
-//  portanto não deleta o paciente do banco de dados, apenas o desativa;
     public ResponseEntity delete(@PathVariable Long id){
-        var paciente = pacienteRepository.getReferenceById(id);
-        paciente.inativar();
+        var paciente = pacienteRepository.getReferenceById(id); // Guarda o paciente que será inativado
+        paciente.inativar(); // Inativa o paciente
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // Retorna o código 204 No Content caso tenha sucesso
     }
 
     @GetMapping("/{id}")
-//  O Método detail é chamado quando um detalhamento é requisitado, detalhando o paciente passado como parâmetro;
     public ResponseEntity detail(@PathVariable Long id){
-        var paciente = pacienteRepository.getReferenceById(id);
+        var paciente = pacienteRepository.getReferenceById(id); // Guarda o paciente que será detalhado
 
-        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente)); // Retorna os dados do paciente e o código 200 Ok caso tenha sucesso
     }
 }

@@ -19,55 +19,49 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/medicos")
 @RestController
 public class MedicoController {
-
     @Autowired
-    private MedicoRepository medicoRepository;
+    private MedicoRepository medicoRepository; // Representa os médicos no banco de dados
 
     @PostMapping
     @Transactional
-//  O Método save é chamado quando um cadastro é requisitado, salvando um novo médico no banco de dados;
     public ResponseEntity save(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder){
-        var medico = new Medico(dados);
-        medicoRepository.save(medico);
-        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
+        var medico = new Medico(dados); // Cria um médico com os dados passados no parâmetro
+        medicoRepository.save(medico); // Salva o médico criado no banco de dados
+        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri(); // Cria uma, uri para poder acessar o médico no banco de dados
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico)); // Retorna o médico, seus dados e o código 201 Created caso tenha sucesso no cadastro
     }
 
     @GetMapping
-//  O Método list é chamado quando uma listagem de médicos é requisitada, listando 5 médicos;
     public ResponseEntity <Page<DadosListagemMedico>> list(@PageableDefault(size = 5, sort = {"crm"}) Pageable pagina){
-        var page = medicoRepository.findAllByAtivoTrue(pagina).map(DadosListagemMedico::new);
-        return ResponseEntity.ok(page);
+        var page = medicoRepository.findAllByAtivoTrue(pagina).map(DadosListagemMedico::new); // Cria uma página apenas com os médicos ativos
+
+        return ResponseEntity.ok(page); // Retorna uma página com 5 médicos e código 200 Ok caso tenha sucesso
     }
 
     @PutMapping
     @Transactional
-//  O Método update é chamado quando uma atualização é requisitada, atualizando algum dado do médico passado como parâmetro;
     public ResponseEntity update(@RequestBody @Valid DadosAtualizarMedico dados){
-        var medico = medicoRepository.getReferenceById(dados.id());
-        medico.atualizarInformacoes(dados);
+        var medico = medicoRepository.getReferenceById(dados.id()); // Guarda o médico que terá os dados atualizados
+        medico.atualizarInformacoes(dados); // Atualiza os dados do médico
 
-        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico)); // Retorna os dados do médico atualizados e o código 200 Ok caso tenha sucesso
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-//  O Método delete é chamado quando uma exclusão de médico é requisitada,o delete é lógico,
-//  portanto não deleta o médico do banco de dados, apenas o desativa;
     public ResponseEntity delete(@PathVariable Long id){
-        var medico = medicoRepository.getReferenceById(id);
-        medico.inativar();
+        var medico = medicoRepository.getReferenceById(id); // Guarda o médico que será inativado
+        medico.inativar(); // Inativa o médico
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // Retorna o código 204 No Content caso tenha sucesso
     }
 
     @GetMapping("/{id}")
-//  O Método detail é chamado quando um detalhamento é requisitado, detalhando o médico passado como parâmetro;
     public ResponseEntity detail(@PathVariable Long id){
-        var medico = medicoRepository.getReferenceById(id);
+        var medico = medicoRepository.getReferenceById(id); // Guarda o médico que será detalhado
 
-        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico)); // Retorna os dados do médico e código 200 Ok caso tenha sucesso
     }
 
 }

@@ -18,21 +18,20 @@ import med.api.domain.medico.Especialidade;
 @EqualsAndHashCode(of = "id")
 public class Medico {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Atributos da classe Medico
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) // Estrátegia de geração de ‘id’
     private Long id;
     private String nome;
     private String telefone;
     private String email;
     private String crm;
-
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // Específica que o atributo especialidade é um ENUM e deve ser guardado no banco de dados como ‘String’
     private Especialidade especialidade;
-
-    @Embedded
+    @Embedded // Indica que a entidade Endereco deve ser armazenada como parte da entidade Medico
     private Endereco endereco;
     private Boolean ativo;
 
-    public Medico(DadosCadastroMedico dados) {
+    public Medico(DadosCadastroMedico dados) { // Constroi um objeto Medico com os dados passados
         this.ativo = true;
         this.nome = dados.nome();
         this.telefone = dados.telefone();
@@ -42,7 +41,7 @@ public class Medico {
         this.endereco = new Endereco(dados.endereco());
     }
 
-    public void atualizarInformacoes(DadosAtualizarMedico dados) {
+    public void atualizarInformacoes(DadosAtualizarMedico dados) { // Atualiza os dados do médico caso os dados passados não sejam nulos
         if (dados.nome() != null) {
             this.nome = dados.nome();
         }
@@ -55,11 +54,6 @@ public class Medico {
     }
 
     public void inativar() {
-        this.ativo = false;
-    }
-
-    public void ativar() {
-        if(!this.ativo) {
-        }
+        this.ativo = false; // Inativa o médico
     }
 }

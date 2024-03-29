@@ -17,17 +17,18 @@ import med.api.domain.paciente.DadosCadastroPaciente;
 @EqualsAndHashCode(of = "id")
 public class Paciente {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Atributos da classe Paciente
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) // Estrátegia de geração de ‘id’
     private Long id;
     private String nome;
     private String cpf;
     private String telefone;
     private String email;
-    @Embedded
+    @Embedded // Indica que a entidade Endereço deve ser armazenada como parte da entidade Paciente
     private Endereco endereco;
     private Boolean ativo;
 
-    public Paciente(DadosCadastroPaciente dados) {
+    public Paciente(DadosCadastroPaciente dados) { // Constroi um objeto Paciente com os dados passados
         this.ativo = true;
         this.nome = dados.nome();
         this.cpf = dados.cpf();
@@ -36,7 +37,7 @@ public class Paciente {
         this.endereco = new Endereco(dados.endereco());
     }
 
-    public void atualizarInformacoes(DadosAtualizarPaciente dados) {
+    public void atualizarInformacoes(DadosAtualizarPaciente dados) { // Atualiza os dados do paciente caso os dados passados não sejam nulos
         if (dados.nome() != null) {
             this.nome = dados.nome();
         }
@@ -49,6 +50,6 @@ public class Paciente {
     }
 
     public void inativar() {
-        this.ativo = false;
+        this.ativo = false; // Inativa o paciente
     }
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Endereco {
 
+    // Atributos da classe Endereco
     private String logradouro;
     private String bairro;
     private String cep;
@@ -19,7 +20,7 @@ public class Endereco {
     private String complemento;
     private String numero;
 
-    public Endereco(DadosEndereco dados) {
+    public Endereco(DadosEndereco dados) { // Constroi um Objeto Endereco com os dados passados
         this.logradouro = dados.logradouro();
         this.bairro = dados.bairro();
         this.cep = dados.cep();
@@ -27,10 +28,9 @@ public class Endereco {
         this.uf = dados.uf();
         this.complemento = dados.complemento();
         this.numero = dados.numero();
-
     }
 
-    public void atualizarInformações(DadosEndereco dados) {
+    public void atualizarInformações(DadosEndereco dados) { // Atualiza as informações de endereço caso os dados passados não sejam nulos
         if (dados.logradouro() != null) {
             this.logradouro = dados.logradouro();
         }
